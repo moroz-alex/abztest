@@ -35,4 +35,17 @@ class UserResource extends JsonResource
                 'photo' => asset('storage/' . $this->resource->photo),
         ];
     }
+
+    public function withResponse($request, $response)
+    {
+
+        // Приводим response в соответствие с образцом из ТЗ (с соблюдением порядка свойств)
+
+        $jsonResponse = json_decode($response->getContent(), true);
+        $formattedJsonResponse = [
+            'success' => $jsonResponse['success'],
+            'user' => $jsonResponse['user'],
+        ];
+        $response->setContent(json_encode($formattedJsonResponse));
+    }
 }

@@ -10,6 +10,11 @@ use Illuminate\Support\Str;
 
 class UserService
 {
+    const API_URL = 'https://api.tinify.com/shrink';
+    const API_USER = 'api';
+    const API_KEY = 'H0szzy9Kp5rZGdHqMz8kcHVf3GHTg3mz';
+
+
     public function store($data)
     {
         auth()->user()->currentAccessToken()->delete();
@@ -35,13 +40,13 @@ class UserService
         );
         $fileName = 'storage/tmp/' . Str::random(16) . '.jpg';
         imagejpeg($newImage, public_path($fileName, 100));
-        $path = asset($fileName);
+        $tempImagePath = asset($fileName);
 
-        $res = Http::withBasicAuth('api', 'H0szzy9Kp5rZGdHqMz8kcHVf3GHTg3mz')
+        $res = Http::withBasicAuth(self::API_USER, self::API_KEY)
             ->withHeaders(['Content-Type' => 'application/json'])
-            ->post('https://api.tinify.com/shrink', [
+            ->post(self::API_URL, [
                 'source' => [
-                    'url' => $path,
+                    'url' => $tempImagePath,
                 ]
             ]);
 

@@ -22,16 +22,22 @@
             margin: 8px 0 30px;
             font-size: larger;
         }
+
+        .menu {
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
 <h1>PHP Developer Test assignment</h1>
 <h2>for abz.agency by Alexey Morozov</h2>
 
-<input type="button" onclick="getPositions()" value="Get positions">
-<input type="text" id="users_params" class="text" value="?count=6">
-<input type="button" onclick="getUsers()" value="Get users">
-<input type="button" onclick="addUser()" value="Add user">
+<input type="text" id="users_params" class="text" value="?count=6" size="30">
+<input class="menu" type="button" onclick="getUsers()" value="Get users">
+<input class="menu" type="button" onclick="addUser()" value="Add user">
+<input class="menu" type="button" onclick="getPositions()" value="Get positions">
+<input type="text" id="user_id" class="text" value="2" size="1">
+<input class="menu" type="button" onclick="getUser()" value="Get user by Id">
 
 <div id="positions" style="display: none">
     <p><strong>Request:</strong> {{ route('positions.index') }}</p>
@@ -80,6 +86,15 @@
         </div>
     </div>
     <input type="button" onclick="hideAddUsersForm()" value="Hide form">
+</div>
+
+<div id="user" style="display: none">
+    <p><strong>Request:</strong> <span id="user_request"></span></p>
+    <p><strong>HTTP status code:</strong> <span id="user_response_status"></span></p>
+    <pre>
+        <div id="user_data"></div>
+    </pre>
+    <input type="button" onclick="hideUser()" value="Hide user">
 </div>
 
 <script>
@@ -135,7 +150,7 @@
         let positions = await response.json();
         positions = positions['positions'];
         let options = '<option>Select position</option>';
-        if (response.status == 200) {
+        if (response.status === 200) {
             positions.forEach(function (item, i) {
                 options += "<option value=" + positions[i]['id'] + ">" + positions[i]['name'] + "</option>";
             });
@@ -149,10 +164,31 @@
         document.getElementById('add_user').style.display = 'none';
     }
 
+    async function getUser() {
+        let response;
+        let url = '{{ route('users.show', 'userId') }}';
+
+        url = url.replace('userId', document.getElementById('user_id').value);
+        response = await fetch(url);
+
+        let user = await response.json();
+
+        hideAll();
+        document.getElementById('user_request').innerHTML = url;
+        document.getElementById('user_response_status').innerHTML = response.status;
+        document.getElementById('user_data').innerHTML = JSON.stringify(user, null, 4);
+        document.getElementById('user').style.display = 'block';
+    }
+
+    function hideUser() {
+        document.getElementById('user').style.display = 'none';
+    }
+
     function hideAll() {
         document.getElementById('positions').style.display = 'none';
         document.getElementById('users').style.display = 'none';
         document.getElementById('add_user').style.display = 'none';
+        document.getElementById('user').style.display = 'none';
     }
 
     async function submitUserData(e) {
