@@ -40,6 +40,7 @@ class UserResource extends JsonResource
     {
 
         // Приводим response в соответствие с образцом из ТЗ (с соблюдением порядка свойств)
+        // если не заморачиваться с порядком, этот метод не нужен))
 
         $jsonResponse = json_decode($response->getContent(), true);
         $formattedJsonResponse = [

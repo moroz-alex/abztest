@@ -30,6 +30,7 @@ class UserCollection extends ResourceCollection
     {
 
         // Приводим response в соответствие с образцом из ТЗ (с соблюдением порядка свойств)
+        // если не заморачиваться с порядком, все становится гораздо проще и короче))
 
         $jsonResponse = json_decode($response->getContent(), true);
         $hasPagination = isset($jsonResponse['links']);
