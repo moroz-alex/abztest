@@ -14,7 +14,6 @@ class UserService
     const API_USER = 'api';
     const API_KEY = 'H0szzy9Kp5rZGdHqMz8kcHVf3GHTg3mz';
 
-
     public function store($data)
     {
         auth()->user()->currentAccessToken()->delete();
